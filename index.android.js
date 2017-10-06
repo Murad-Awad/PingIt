@@ -35,6 +35,7 @@ var CustomMap = React.createClass({
     OneSignal.addEventListener('opened', this.onOpened);
     OneSignal.addEventListener('registered', this.onRegistered);
     OneSignal.addEventListener('ids', this.onIds);
+    OneSignal.inFocusDisplaying(2);
     navigator.geolocation.getCurrentPosition(
       (position) => {
         this.setState({
@@ -83,6 +84,7 @@ var CustomMap = React.createClass({
   },
   onRegistered:function(notifData){
     console.log("Device had been registered for push notifications!", notifData);
+
   },
   onIds:function(device){
     console.log('Device info: ', device);
