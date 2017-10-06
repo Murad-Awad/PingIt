@@ -7,6 +7,7 @@ import React, { Component } from 'react';
    Dimensions
  } from 'react-native';
  import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+ import OneSignal from 'react-native-onesignal';
  var {width, height} = Dimensions.get('window');
  const Aspect_Ratio = width/height;
 const LATITUDE = 37.8715926;
@@ -30,6 +31,10 @@ var CustomMap = React.createClass({
   },
 
   componentDidMount: function() {
+    OneSignal.addEventListener('received', this.onReceived);
+    OneSignal.addEventListener('opened', this.onOpened);
+    OneSignal.addEventListener('registered', this.onRegistered);
+    OneSignal.addEventListener('ids', this.onIds);
     navigator.geolocation.getCurrentPosition(
       (position) => {
         this.setState({
@@ -61,9 +66,27 @@ var CustomMap = React.createClass({
   },
 
   componentWillUnmount: function() {
+     OneSignal.removeEventListener('received', this.onReceived);
+     OneSignal.removeEventListener('opened', this.onOpened);
+     OneSignal.removeEventListener('registered', this.onRegistered);
+     OneSignal.removeEventListener('ids', this.onIds);
     navigator.geolocation.clearWatch(this.watchID);
   },
-
+  onReceived: function(notification){
+    console.log("Notification received: ", notification);
+  },
+  onOpened: function(openResult){
+    console.log('Message: ', openResult.notification.payload.body);
+    console.log('Data: ', openResult.notification.payload.additionalData);
+    console.log('isActive: ', openResult.notification.isAppInFocus);
+    console.log('openResult: ', openResult);
+  },
+  onRegistered:function(notifData){
+    console.log("Device had been registered for push notifications!", notifData);
+  },
+  onIds:function(device){
+    console.log('Device info: ', device);
+  },
   onRegionChange(region) {
     this.setState({ region });
   },
