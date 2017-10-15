@@ -15,6 +15,7 @@ const LATITUDE = 37.8715926;
 const LONGITUDE = -122.27274699999998;
 const LATITUDE_DELTA = 0.01;
 const LONGITUDE_DELTA = LATITUDE_DELTA*Aspect_Ratio;
+
 var CustomMap = React.createClass( {
   getInitialState() {
     return {
@@ -36,8 +37,18 @@ var CustomMap = React.createClass( {
     OneSignal.addEventListener('registered', this.onRegistered);
     OneSignal.addEventListener('ids', this.onIds);
     OneSignal.inFocusDisplaying(2);
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
+    navigator.geolocation.getCurrentPosition( 
+      (position) => { 
+        var latitude = parseInt(JSON.stringify(position.coords.latitude));
+        var longitude = parseInt(JSON.stringify(position.coords.longitude));
+        if (latitude > LATITUDE-1 && latitude<LATITUDE+1 && longitude> LONGITUDE-1 && longitude<LONGITUDE+1) {
+        let data = [1,2] // some array as payload
+        let contents = {
+        'en': 'has gotten home'
+        }
+        playerId = '55920dd3-d936-476d-860e-09c4cca02f5e';
+        OneSignal.postNotification(contents, data, playerId);
+      }
         this.setState({
           region: {
             latitude: position.coords.latitude,
@@ -50,22 +61,36 @@ var CustomMap = React.createClass( {
             longitude:position.coords.longitude,
           }
         });
-      },
+       },
       (error) => alert(error.message),
     );
-
     this.watchID = navigator.geolocation.watchPosition((position) => {
+      var latitude = parseInt(JSON.stringify(position.coords.latitude));
+        var longitude = parseInt(JSON.stringify(position.coords.longitude));
+        if (latitude > LATITUDE-1 && latitude<LATITUDE+1 && longitude> LONGITUDE-1 && longitude<LONGITUDE+1) {
+        let data = [1,2] // some array as payload
+        let contents = {
+        'en': 'has gotten home'
+        }
+        playerId = '55920dd3-d936-476d-860e-09c4cca02f5e';
+        OneSignal.postNotification(contents, data, playerId);
+      }
       const newRegion = {
         latitude: position.coords.latitude,
         longitude: position.coords.longitude,
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA
       }
-
       this.onRegionChange(newRegion);
     });
   },
-
+onNotificationOpened: function(message, data, isActive) {
+  if (data.p2p_notification) {
+    for (var num in data.p2p_notification) {
+      // console.log(data.p2p_notification[num]);
+    }
+  }
+},
   componentWillUnmount: function() {
      OneSignal.removeEventListener('received', this.onReceived);
      OneSignal.removeEventListener('opened', this.onOpened);

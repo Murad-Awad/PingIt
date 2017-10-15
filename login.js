@@ -35,6 +35,7 @@ var LoginPage = React.createClass ({
           <Text style={styles.description}>you easily add</Text>
           <Text style={styles.description}>friends to notify.</Text>
           <View style = {styles.login}>
+          <FBLogin />
           </View>
         </View>
       </View>
