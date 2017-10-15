@@ -9,18 +9,20 @@ import {
   View,
 } from 'react-native';
  import * as firebase from 'firebase';
-const firebaseConfig = {
+var { FBLogin, FBLoginManager } = require('react-native-facebook-login');
+ var config = {
     apiKey: "AIzaSyA_Jn8KsODb12GkJWAJqU1Df0QfHpcEGLY",
     authDomain: "pingit-9dbc3.firebaseapp.com",
     databaseURL: "https://pingit-9dbc3.firebaseio.com",
     projectId: "pingit-9dbc3",
     storageBucket: "pingit-9dbc3.appspot.com",
     messagingSenderId: "106743397571"
- };
-firebase.initializeApp(firebaseConfig);
+  };
+  firebase.initializeApp(config);
 var LoginPage = React.createClass ({
 
   render() {
+    var _this = this;
     return (
       <View style={styles.container}>
         <View style={styles.whiteBox}>
@@ -32,6 +34,8 @@ var LoginPage = React.createClass ({
           <Text style={styles.description}>Facebook lets</Text>
           <Text style={styles.description}>you easily add</Text>
           <Text style={styles.description}>friends to notify.</Text>
+          <View style = {styles.login}>
+          </View>
         </View>
       </View>
     );
@@ -63,6 +67,10 @@ const styles = StyleSheet.create({
     width: null,
     height: null,
     resizeMode: 'cover',
+  },
+  login: {
+    alignItems: 'center',
+    height: 40, 
   },
   description: {
     //width: 233px,

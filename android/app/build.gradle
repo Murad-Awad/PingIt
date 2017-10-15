@@ -135,6 +135,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-facebook-login')
     compile project(':react-native-onesignal')
     compile project(':react-native-maps')
     compile fileTree(dir: "libs", include: ["*.jar"])
