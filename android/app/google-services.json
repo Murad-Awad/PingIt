@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "106743397571",
+    "firebase_url": "https://pingit-9dbc3.firebaseio.com",
+    "project_id": "pingit-9dbc3",
+    "storage_bucket": "pingit-9dbc3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:106743397571:android:871782cfa1d4422a",
+        "android_client_info": {
+          "package_name": "com.pingit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "106743397571-1pnkimnm7r8tj7107t7bfvagvjmiamot.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsTm1-t8sTLgK8fVBScD8-1MhQ_e9l9RU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
