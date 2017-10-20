@@ -135,6 +135,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-google-places')
     compile project(':react-native-facebook-login')
     compile project(':react-native-onesignal')
     compile project(':react-native-maps')
