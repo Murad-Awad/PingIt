@@ -1,4 +1,4 @@
- import React, { Component } from 'react';
+import React, { Component } from 'react';
  import {
    AppRegistry,
    StyleSheet,
@@ -9,6 +9,7 @@
  import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
  import OneSignal from 'react-native-onesignal';
  import * as firebase from 'firebase';
+ import RNGooglePlaces from 'react-native-google-places';
  var {width, height} = Dimensions.get('window');
 const Aspect_Ratio = width/height;
 const LATITUDE = 37.8715926;
