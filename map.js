@@ -16,9 +16,10 @@ const LATITUDE = 37.8715926;
 const LONGITUDE = -122.27274699999998;
 const LATITUDE_DELTA = 0.01;
 const LONGITUDE_DELTA = LATITUDE_DELTA*Aspect_Ratio;
-
-var CustomMap = React.createClass( {
-  getInitialState() {
+var SelectedLongitude = LONGITUDE;
+var SelectedLatitude = LATITUDE;
+var CustomMap = React.createClass( {  
+  getInitialState() {  
     return {
       region: {
         latitude: LATITUDE,
@@ -29,7 +30,11 @@ var CustomMap = React.createClass( {
       marker:{
         latitude:LATITUDE,
         longitude: LONGITUDE,
-      }
+      },
+      DestinationMarker:{
+            latitude: SelectedLatitude,
+            longitude: SelectedLongitude
+          }
     };
   },
   componentDidMount: function() {
@@ -38,6 +43,22 @@ var CustomMap = React.createClass( {
     OneSignal.addEventListener('registered', this.onRegistered);
     OneSignal.addEventListener('ids', this.onIds);
     OneSignal.inFocusDisplaying(2);
+     RNGooglePlaces.openPlacePickerModal()
+     .then((place)=> {
+     SelectedLatitude = parseInt(JSON.stringify(place.latitude));
+      SelectedLongitude = parseInt(JSON.stringify(place.longitude));
+      })
+     .catch((error) => console.log(error.message));
+     RNGooglePlaces.getCurrentPlace()
+    .then((results) => { 
+        var latitude = parseInt(JSON.stringify(position.latitude));
+        var longitude = parseInt(JSON.stringify(position.longitude));
+      this.setState({
+      latitude: latitude,
+      longitude: longitude,
+      radius: 0.1
+      })})
+    .catch((error) => console.log(error.message));
     navigator.geolocation.getCurrentPosition( 
       (position) => { 
         var latitude = parseInt(JSON.stringify(position.coords.latitude));
@@ -60,6 +81,10 @@ var CustomMap = React.createClass( {
           marker:{
             latitude:position.coords.latitude,
             longitude:position.coords.longitude,
+          },
+          DestinationMarker:{
+            latitude: SelectedLatitude,
+            longitude: SelectedLongitude
           }
         });
        },
@@ -135,6 +160,8 @@ onNotificationOpened: function(message, data, isActive) {
         <View style = {styles.marker}/>
         </View>
           </MapView.Marker>
+        <MapView.Marker
+        coordinate={this.state.DestinationMarker}/>
         </MapView>
 
       </View>
