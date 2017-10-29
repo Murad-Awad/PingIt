@@ -16,8 +16,14 @@ const LATITUDE = 37.8715926;
 const LONGITUDE = -122.27274699999998;
 const LATITUDE_DELTA = 0.01;
 const LONGITUDE_DELTA = LATITUDE_DELTA*Aspect_Ratio;
-var SelectedLongitude = LONGITUDE;
-var SelectedLatitude = LATITUDE;
+var SelectedLongitude;
+var SelectedLatitude;
+var setMarker = function(place){
+  return{
+    latitude: place.latitude,
+    longitude: place.longitude
+  }
+};
 var CustomMap = React.createClass( {  
   getInitialState() {  
     return {
@@ -32,9 +38,9 @@ var CustomMap = React.createClass( {
         longitude: LONGITUDE,
       },
       DestinationMarker:{
-            latitude: SelectedLatitude,
-            longitude: SelectedLongitude
-          }
+        latitude: LATITUDE,
+        longitude: LONGITUDE
+      }
     };
   },
   componentDidMount: function() {
@@ -43,22 +49,19 @@ var CustomMap = React.createClass( {
     OneSignal.addEventListener('registered', this.onRegistered);
     OneSignal.addEventListener('ids', this.onIds);
     OneSignal.inFocusDisplaying(2);
-     RNGooglePlaces.openPlacePickerModal()
-     .then((place)=> {
-     SelectedLatitude = parseInt(JSON.stringify(place.latitude));
-      SelectedLongitude = parseInt(JSON.stringify(place.longitude));
-      })
-     .catch((error) => console.log(error.message));
-     RNGooglePlaces.getCurrentPlace()
-    .then((results) => { 
-        var latitude = parseInt(JSON.stringify(position.latitude));
-        var longitude = parseInt(JSON.stringify(position.longitude));
-      this.setState({
-      latitude: latitude,
-      longitude: longitude,
+    RNGooglePlaces.openPlacePickerModal({
+      latitude: LATITUDE,
+      longitude: LONGITUDE,
       radius: 0.1
-      })})
-    .catch((error) => console.log(error.message));
+     })
+    .then((place) => {
+    console.log(place);
+      SelectedLatitude = place.latitude;
+      SelectedLongitude = place.longitude;
+      this.onPlaceSelection({latitude:place.latitude, longitude: place.longitude});
+    })
+    .catch(error => console.log(error.message));  // error is a Javascript Error object
+  
     navigator.geolocation.getCurrentPosition( 
       (position) => { 
         var latitude = parseInt(JSON.stringify(position.coords.latitude));
@@ -81,14 +84,10 @@ var CustomMap = React.createClass( {
           marker:{
             latitude:position.coords.latitude,
             longitude:position.coords.longitude,
-          },
-          DestinationMarker:{
-            latitude: SelectedLatitude,
-            longitude: SelectedLongitude
           }
         });
        },
-      (error) => alert(error.message),
+      (error) => alert('Restart Dingo and Enable Location Tracking'),
     );
     this.watchID = navigator.geolocation.watchPosition((position) => {
       var latitude = parseInt(JSON.stringify(position.coords.latitude));
@@ -142,6 +141,10 @@ onNotificationOpened: function(message, data, isActive) {
   },
   onRegionChange(region) {
     this.setState({ region });
+  },
+  onPlaceSelection(DestinationMarker){
+    this.setState({ DestinationMarker });
+    console.log('WOW THIS WORKS');
   },
 
   render() {
