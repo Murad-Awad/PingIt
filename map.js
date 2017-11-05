@@ -1,15 +1,18 @@
+
 import React, { Component } from 'react';
  import {
    AppRegistry,
    StyleSheet,
    Text,
    View,
-   Dimensions
+   Dimensions,
+   TouchableOpacity
  } from 'react-native';
  import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
  import OneSignal from 'react-native-onesignal';
  import * as firebase from 'firebase';
  import RNGooglePlaces from 'react-native-google-places';
+ import reactCreateClass from 'create-react-class';
  var {width, height} = Dimensions.get('window');
 const Aspect_Ratio = width/height;
 const LATITUDE = 37.8715926;
@@ -24,7 +27,9 @@ var setMarker = function(place){
     longitude: place.longitude
   }
 };
-var CustomMap = React.createClass( {  
+var CustomMap = reactCreateClass( {  
+
+
   getInitialState() {  
     return {
       region: {

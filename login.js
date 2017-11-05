@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native';
  import * as firebase from 'firebase';
+import reactCreateClass from 'create-react-class';
 var { FBLogin, FBLoginManager } = require('react-native-facebook-login');
  var config = {
     apiKey: "AIzaSyA_Jn8KsODb12GkJWAJqU1Df0QfHpcEGLY",
@@ -19,7 +20,7 @@ var { FBLogin, FBLoginManager } = require('react-native-facebook-login');
     messagingSenderId: "106743397571"
   };
   firebase.initializeApp(config);
-var LoginPage = React.createClass ({
+var LoginPage = reactCreateClass ({
 
   render() {
     var _this = this;

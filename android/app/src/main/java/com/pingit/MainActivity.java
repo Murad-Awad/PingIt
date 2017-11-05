@@ -1,6 +1,12 @@
 package com.pingit;
 
 import com.facebook.react.ReactActivity;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookSdk;
+import com.facebook.reactnative.androidsdk.FBSDKPackage;
+import com.facebook.appevents.AppEventsLogger;
+import android.content.Intent;     // <--- import
+
 
 public class MainActivity extends ReactActivity {
 
@@ -10,6 +16,13 @@ public class MainActivity extends ReactActivity {
      */
     @Override
     protected String getMainComponentName() {
+
         return "pingit";
+    }
+     
+   @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        MainApplication.getCallbackManager().onActivityResult(requestCode, resultCode, data);
     }
 }
