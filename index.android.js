@@ -14,10 +14,11 @@ import React, { Component } from 'react';
  import * as firebase from 'firebase';
 var CustomMap = require('./map.js');
 var LoginPage = require('./login.js');
+var FacebookLoginScreen = require('./LoginComplete.js');
 const App = StackNavigator({
   Home: { screen: LoginPage },
-  Map: {screen: CustomMap}
-
+  Map: {screen: CustomMap},
+  LoginConfirm: {screen: FacebookLoginScreen}
 });
 
 AppRegistry.registerComponent('pingit',()=> App);

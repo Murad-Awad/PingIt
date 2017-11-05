@@ -16,6 +16,7 @@ import reactCreateClass from 'create-react-class';
 const FBSDK = require('react-native-fbsdk');
 const {
   LoginButton,
+  AccessToken
 } = FBSDK;
  var config = {
     apiKey: "AIzaSyA_Jn8KsODb12GkJWAJqU1Df0QfHpcEGLY",
@@ -26,12 +27,34 @@ const {
     messagingSenderId: "106743397571"
   };
   firebase.initializeApp(config);
+  var setUser = function(name, id){
+    return {
+      name: name,
+      id: id
+    }
+  };
+
+  var initUser = function(token) {
+  fetch('https://graph.facebook.com/v2.5/me?fields=email,name,friends&access_token=' + token)
+  .then((response) => response.json())
+  .then((json) => {
+    // Some user object has been set up somewhere, build that user here
+    name = JSON.stringify(json.name);
+    id = JSON.stringify(json.id);
+    setUser(name, id);
+    navigate('LoginConfirm', {name: name});
+  })
+  .catch(() => {
+    reject('ERROR GETTING DATA FROM FACEBOOK')
+  })
+};
 export default class LoginPage extends React.Component {
   static navigationOptions = {
     header: null,
   };
 
   render() {
+    const { navigate } = this.props.navigation;
     return (
       <View style={styles.container}>
         <View style={styles.whiteBox}>
@@ -43,15 +66,27 @@ export default class LoginPage extends React.Component {
           <Text style={styles.description}>friends to notify.</Text>
           <LoginButton
           publishPermissions={["publish_actions"]}
-          onLoginFinished={
-            (error, result) => {  
+          onLoginFinished={ 
+            (error, result) => {
+              console.log(result);
               if (error) {
                 alert("Login failed with error: " + result.error);
               } else if (result.isCancelled) {
                 alert("Login was cancelled");
-              } else {
-                alert("Login was successful with permissions: " + result.grantedPermissions)
-              }
+              } else {  
+                AccessToken.getCurrentAccessToken().then((data) => {
+                  const { accessToken } = data;
+                  fetch('https://graph.facebook.com/v2.5/me?fields=email,name,friends&access_token=' + accessToken)
+                    .then((response) => response.json())
+                    .then((json) => {
+                    // Some user object has been set up somewhere, build that user here
+                  name = JSON.stringify(json.name);
+                  id = JSON.stringify(json.id);
+                  console.log(name);
+                  navigate('LoginConfirm', {name: name, id: id});   
+                  })
+              })
+            }
             }
           }
           onLogoutFinished={() => alert("User logged out")}/>
@@ -101,3 +136,4 @@ const styles = StyleSheet.create({
   },
 });
  module.exports = LoginPage;
+
