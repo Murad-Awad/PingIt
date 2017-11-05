@@ -40,6 +40,7 @@
 		5773B1E9CF924902978534A6 /* libRCTOneSignal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C40D8BD604DD45E0A1A6055E /* libRCTOneSignal.a */; };
 		9E4192749440496C9DBEC5CD /* libRNGooglePlaces.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BB695BE4CEF34B2C8EB15BF5 /* libRNGooglePlaces.a */; };
 		B39C534984DD4DC2B5D118FD /* libRCTFBSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F458CFB036B24063A47738B9 /* libRCTFBSDK.a */; };
+		F74D72A3851246B7B25DCACC /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CE5706A7D83448BA82599E8 /* libReactNativePermissions.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -275,6 +276,8 @@
 		BB695BE4CEF34B2C8EB15BF5 /* libRNGooglePlaces.a */ = {isa = PBXFileReference; name = "libRNGooglePlaces.a"; path = "libRNGooglePlaces.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		34EA9E0D0BF84CB6BA8CA61D /* RCTFBSDK.xcodeproj */ = {isa = PBXFileReference; name = "RCTFBSDK.xcodeproj"; path = "../node_modules/react-native-fbsdk/ios/RCTFBSDK.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		F458CFB036B24063A47738B9 /* libRCTFBSDK.a */ = {isa = PBXFileReference; name = "libRCTFBSDK.a"; path = "libRCTFBSDK.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		033889E00671482F96E78233 /* ReactNativePermissions.xcodeproj */ = {isa = PBXFileReference; name = "ReactNativePermissions.xcodeproj"; path = "../node_modules/react-native-permissions/ReactNativePermissions.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		6CE5706A7D83448BA82599E8 /* libReactNativePermissions.a */ = {isa = PBXFileReference; name = "libReactNativePermissions.a"; path = "libReactNativePermissions.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -307,6 +310,7 @@
 				5773B1E9CF924902978534A6 /* libRCTOneSignal.a in Frameworks */,
 				9E4192749440496C9DBEC5CD /* libRNGooglePlaces.a in Frameworks */,
 				B39C534984DD4DC2B5D118FD /* libRCTFBSDK.a in Frameworks */,
+				F74D72A3851246B7B25DCACC /* libReactNativePermissions.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -479,6 +483,7 @@
 				57F34B13E7744AC4AD1E568A /* RCTOneSignal.xcodeproj */,
 				A4C039EDFF344C689CE228C5 /* RNGooglePlaces.xcodeproj */,
 				34EA9E0D0BF84CB6BA8CA61D /* RCTFBSDK.xcodeproj */,
+				033889E00671482F96E78233 /* ReactNativePermissions.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1026,6 +1031,7 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/pingit.app/pingit";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1033,6 +1039,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios\RCTOneSignal/**",
 					"$(SRCROOT)\..\node_modules\react-native-google-places\ios",
 					"$(SRCROOT)\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
+					"$(SRCROOT)\..\node_modules\react-native-permissions/**",
 				);
 			};
 			name = Debug;
@@ -1053,6 +1060,7 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/pingit.app/pingit";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1060,6 +1068,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios\RCTOneSignal/**",
 					"$(SRCROOT)\..\node_modules\react-native-google-places\ios",
 					"$(SRCROOT)\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
+					"$(SRCROOT)\..\node_modules\react-native-permissions/**",
 				);
 			};
 			name = Release;
@@ -1085,6 +1094,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios\RCTOneSignal/**",
 					"$(SRCROOT)\..\node_modules\react-native-google-places\ios",
 					"$(SRCROOT)\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
+					"$(SRCROOT)\..\node_modules\react-native-permissions/**",
 				);
 			};
 			name = Debug;
@@ -1109,6 +1119,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios\RCTOneSignal/**",
 					"$(SRCROOT)\..\node_modules\react-native-google-places\ios",
 					"$(SRCROOT)\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
+					"$(SRCROOT)\..\node_modules\react-native-permissions/**",
 				);
 			};
 			name = Release;
@@ -1138,6 +1149,7 @@
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1145,6 +1157,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios\RCTOneSignal/**",
 					"$(SRCROOT)\..\node_modules\react-native-google-places\ios",
 					"$(SRCROOT)\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
+					"$(SRCROOT)\..\node_modules\react-native-permissions/**",
 				);
 			};
 			name = Debug;
@@ -1174,6 +1187,7 @@
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1181,6 +1195,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios\RCTOneSignal/**",
 					"$(SRCROOT)\..\node_modules\react-native-google-places\ios",
 					"$(SRCROOT)\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
+					"$(SRCROOT)\..\node_modules\react-native-permissions/**",
 				);
 			};
 			name = Release;
@@ -1205,6 +1220,7 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 			};
 			name = Debug;
@@ -1229,6 +1245,7 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 			};
 			name = Release;

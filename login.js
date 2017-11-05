@@ -48,7 +48,8 @@ var setUserMobile = function(userId, name, onesignalid) {
 
         return firebase.database().ref(testpath).set({
             name: name,
-            onesignalid: 1
+            onesignalid: 1,
+            setup: false
         })
 
     };
@@ -58,6 +59,7 @@ export default class LoginPage extends React.Component {
   };
     render() {  
     const { navigate } = this.props.navigation;
+    if (auth.currentUser==null){
     return (
       <View style={styles.container}>
         <View style={styles.whiteBox}>
@@ -83,26 +85,27 @@ export default class LoginPage extends React.Component {
                     .then((response) => response.json())
                     .then((json) => {
                     // Some user object has been set up somewhere, build that user here
-                  name = JSON.stringify(json.name);
-                  id = JSON.stringify(json.id);
+                  name = json.name;
+                  id = json.id;
                   console.log(name);
                   const credential = provider.credential(accessToken);
                   registerUser(credential);
                   var user = auth.currentUser;
                   setUserMobile(user.uid, name, id);
                   navigate('LoginConfirm', {name: name, id: id});   
-                  })
+                  }  )
               })
             }
             }
           }
-          onLogoutFinished={() => alert("User logged out")}/>
+          onLogoutFinished={() => {auth.signOut()}, alert("User logged out")}/>
         </View>
       </View>
           //<Image style={styles.facebookButton}
                  //source={require('./facebook_button.png')} />
     );
   }
+}
 }
 
 const window = Dimensions.get('window');

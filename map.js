@@ -27,6 +27,7 @@ var setMarker = function(place){
     longitude: place.longitude
   }
 };
+
 var CustomMap = reactCreateClass( {  
 
 
@@ -92,7 +93,7 @@ var CustomMap = reactCreateClass( {
           }
         });
        },
-      (error) => alert('Restart Dingo and Enable Location Tracking'),
+      (error) => {},
     );
     this.watchID = navigator.geolocation.watchPosition((position) => {
       var latitude = parseInt(JSON.stringify(position.coords.latitude));

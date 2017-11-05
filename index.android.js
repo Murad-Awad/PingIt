@@ -16,7 +16,7 @@ import React, { Component } from 'react';
 var CustomMap = require('./map.js');
 var FacebookLoginScreen = require('./LoginComplete.js');
 const App = StackNavigator({
-  Home: { screen: LoginPage },
+  Home: { screen: CustomMap },
   Map: {screen: CustomMap},
   LoginConfirm: {screen: FacebookLoginScreen}
 });
