@@ -12,8 +12,8 @@ import React, { Component } from 'react';
  import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
  import OneSignal from 'react-native-onesignal';
  import * as firebase from 'firebase';
+ import {LoginPage} from './login.js';
 var CustomMap = require('./map.js');
-var LoginPage = require('./login.js');
 var FacebookLoginScreen = require('./LoginComplete.js');
 const App = StackNavigator({
   Home: { screen: LoginPage },

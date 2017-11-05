@@ -26,7 +26,7 @@ const {
     storageBucket: "pingit-9dbc3.appspot.com",
     messagingSenderId: "106743397571"
   };
-  firebase.initializeApp(config);
+var fbapp =  firebase.initializeApp(config);
   var setUser = function(name, id){
     return {
       name: name,
@@ -34,26 +34,29 @@ const {
     }
   };
 
-  var initUser = function(token) {
-  fetch('https://graph.facebook.com/v2.5/me?fields=email,name,friends&access_token=' + token)
-  .then((response) => response.json())
-  .then((json) => {
-    // Some user object has been set up somewhere, build that user here
-    name = JSON.stringify(json.name);
-    id = JSON.stringify(json.id);
-    setUser(name, id);
-    navigate('LoginConfirm', {name: name});
-  })
-  .catch(() => {
-    reject('ERROR GETTING DATA FROM FACEBOOK')
-  })
-};
-export default class LoginPage extends React.Component {
+const auth = fbapp.auth();
+const provider = firebase.auth.FacebookAuthProvider;
+var user = auth.currentUser;
+var registerUser = function(token){
+  auth.signInWithCredential(token);
+  user = auth.currentUser;
+}
+
+var setUserMobile = function(userId, name, onesignalid) {
+
+        let testpath = "/user/" + userId + "/details";
+
+        return firebase.database().ref(testpath).set({
+            name: name,
+            onesignalid: 1
+        })
+
+    };
+export default class LoginPage extends React.Component {  
   static navigationOptions = {
     header: null,
   };
-
-  render() {
+    render() {  
     const { navigate } = this.props.navigation;
     return (
       <View style={styles.container}>
@@ -83,6 +86,10 @@ export default class LoginPage extends React.Component {
                   name = JSON.stringify(json.name);
                   id = JSON.stringify(json.id);
                   console.log(name);
+                  const credential = provider.credential(accessToken);
+                  registerUser(credential);
+                  var user = auth.currentUser;
+                  setUserMobile(user.uid, name, id);
                   navigate('LoginConfirm', {name: name, id: id});   
                   })
               })
@@ -135,5 +142,6 @@ const styles = StyleSheet.create({
     height: 31,
   },
 });
- module.exports = LoginPage;
+export{fbapp};
+export{LoginPage};
 

@@ -10,19 +10,24 @@ import {
   Dimensions,
   Button
 } from 'react-native';
+import * as firebase from 'firebase';
+import {fbapp} from './login.js';
+
 
 export default class FacebookLoginScreen extends React.Component {
   state = {name: 'Joe'}
   static navigationOptions = {
     header: null,
   };
- 
-  render() {
+   getUser(){  
+    auth.currentUser();
+  }
+  render() {  
     const { params } = this.props.navigation.state;
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.headerText}>Welcome, {params.name} </Text>
+          <Text style={styles.headerText}>Welcome, {params.name}</Text>
         </View>
         <View style={styles.body}>
           <Text style={styles.bodyText}>Dingo automatically</Text>
@@ -31,7 +36,7 @@ export default class FacebookLoginScreen extends React.Component {
           <Text style={styles.bodyText}>so that you do not</Text>
           <Text style={styles.bodyText}>have to.</Text>
         </View>
-        <TouchableOpacity onPress={() => this.props.navigation.navigate('AddFriends')}
+        <TouchableOpacity onPress={() => {console.log(fbapp.auth().currentUser.uid);}}
                           style={styles.button}>
           <Text style={styles.buttonText}>Finish Setup</Text>
         </TouchableOpacity>
