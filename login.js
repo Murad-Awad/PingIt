@@ -7,10 +7,16 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Dimensions,
+  Button
 } from 'react-native';
  import * as firebase from 'firebase';
 import reactCreateClass from 'create-react-class';
-var { FBLogin, FBLoginManager } = require('react-native-facebook-login');
+
+const FBSDK = require('react-native-fbsdk');
+const {
+  LoginButton,
+} = FBSDK;
  var config = {
     apiKey: "AIzaSyA_Jn8KsODb12GkJWAJqU1Df0QfHpcEGLY",
     authDomain: "pingit-9dbc3.firebaseapp.com",
@@ -20,29 +26,44 @@ var { FBLogin, FBLoginManager } = require('react-native-facebook-login');
     messagingSenderId: "106743397571"
   };
   firebase.initializeApp(config);
-var LoginPage = reactCreateClass ({
+export default class LoginPage extends React.Component {
+  static navigationOptions = {
+    header: null,
+  };
 
   render() {
-    var _this = this;
     return (
       <View style={styles.container}>
         <View style={styles.whiteBox}>
-          <View style={styles.dingoCircle}>
-            <Image style={styles.dingoPic}
-                   source={require('./dingotransparent.png')} />
-          </View>
+          <Image style={styles.dingoCircle}
+                 source={require('./img/dingo_circle.png')} />
           <Text style={styles.description}>Logging in with</Text>
           <Text style={styles.description}>Facebook lets</Text>
           <Text style={styles.description}>you easily add</Text>
           <Text style={styles.description}>friends to notify.</Text>
-          <View style = {styles.login}>
-          <FBLogin />
-          </View>
+          <LoginButton
+          publishPermissions={["publish_actions"]}
+          onLoginFinished={
+            (error, result) => {  
+              if (error) {
+                alert("Login failed with error: " + result.error);
+              } else if (result.isCancelled) {
+                alert("Login was cancelled");
+              } else {
+                alert("Login was successful with permissions: " + result.grantedPermissions)
+              }
+            }
+          }
+          onLogoutFinished={() => alert("User logged out")}/>
         </View>
       </View>
+          //<Image style={styles.facebookButton}
+                 //source={require('./facebook_button.png')} />
     );
   }
-});
+}
+
+const window = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -58,21 +79,10 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   dingoCircle: {
-    backgroundColor: '#D0D1D4',
-    width: 150,
-    height: 150,
-    shadowColor: '#000',
-    borderRadius: 100,
-    shadowOffset: {width: 0, height: 2},
-  },
-  dingoPic: {
-    width: null,
-    height: null,
-    resizeMode: 'cover',
-  },
-  login: {
-    alignItems: 'center',
-    height: 40, 
+    marginTop: 30,
+    marginBottom: 25,
+    width: 133,
+    height: 133,
   },
   description: {
     //width: 233px,
@@ -80,9 +90,14 @@ const styles = StyleSheet.create({
     //left: calc(50% - 233px/2),
     //top: calc(50% - 166px/2 + 77.5px),
     fontFamily: 'Avenir',
-    fontSize: 30,
+    fontSize: 22,
     alignItems: 'center',
     color: '#353535',
+  },
+  facebookButton: {
+    marginTop: 25,
+    width: 200,
+    height: 31,
   },
 });
  module.exports = LoginPage;

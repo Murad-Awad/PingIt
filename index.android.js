@@ -15,8 +15,8 @@ import React, { Component } from 'react';
 var CustomMap = require('./map.js');
 var LoginPage = require('./login.js');
 const App = StackNavigator({
-  Home: { screen: CustomMap },
-  Map: {screen: LoginPage}
+  Home: { screen: LoginPage },
+  Map: {screen: CustomMap}
 
 });
 
