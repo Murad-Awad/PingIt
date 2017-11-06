@@ -92,7 +92,7 @@ export default class LoginPage extends React.Component {
                   registerUser(credential);
                   var user = auth.currentUser;
                   setUserMobile(user.uid, name, id);
-                  navigate('LoginConfirm', {name: name, id: id});   
+                  navigate('LoginConfirm', {name: name, id: user.uid});   
                   }  )
               })
             }

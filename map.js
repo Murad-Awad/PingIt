@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
  import {
    AppRegistry,
@@ -6,7 +5,8 @@ import React, { Component } from 'react';
    Text,
    View,
    Dimensions,
-   TouchableOpacity
+   TouchableOpacity,
+   Image
  } from 'react-native';
  import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
  import OneSignal from 'react-native-onesignal';
@@ -14,6 +14,7 @@ import React, { Component } from 'react';
  import RNGooglePlaces from 'react-native-google-places';
  import reactCreateClass from 'create-react-class';
  var {width, height} = Dimensions.get('window');
+ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 const Aspect_Ratio = width/height;
 const LATITUDE = 37.8715926;
 const LONGITUDE = -122.27274699999998;
