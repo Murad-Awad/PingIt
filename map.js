@@ -29,7 +29,7 @@ var setMarker = function(place){
   }
 };
 
-var CustomMap = reactCreateClass( {  
+var CustomMap = reactCreateClass({  
 
 
   getInitialState() {  
@@ -50,7 +50,7 @@ var CustomMap = reactCreateClass( {
       }
     };
   },
-  componentDidMount: function() {
+  componentDidMount: function() {  
     OneSignal.addEventListener('received', this.onReceived);
     OneSignal.addEventListener('opened', this.onOpened);
     OneSignal.addEventListener('registered', this.onRegistered);
@@ -177,7 +177,7 @@ onNotificationOpened: function(message, data, isActive) {
       </View>
     );
   },
-});
+} );
  var styles = StyleSheet.create({
    container: {
      position: 'absolute',

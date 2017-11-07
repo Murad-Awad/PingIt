@@ -16,17 +16,14 @@ import RNGooglePlaces from 'react-native-google-places';
 const LATITUDE = 37.8715926;
 const LONGITUDE = -122.27274699999998;
 const LATITUDE_DELTA = 0.01;
-var setHomeBase = function(latitude, userId, longitude) {
+var setHomeBase = function(latitude, userId, longitude, navigate) {
 
-        let testpath = "/user/" + userId + "/details/";
+        let testpath = "/user/" + userId + "/details/" + "/home";
 
-        return firebase.database().ref(testpath).set({
-          home:{
+        return  firebase.database().ref(testpath).set({
             latitude: latitude,
             longitude: longitude
-          }
         })
-
     };
 var setLocation= function(navigate, userId){
     RNGooglePlaces.openPlacePickerModal({
@@ -36,11 +33,10 @@ var setLocation= function(navigate, userId){
      })
     .then((place) => {
     console.log(place);
-      SelectedLatitude = place.latitude;
-      SelectedLongitude = place.longitude;
-      navigate('AddFriends' );
-      console.log(userId);
+      SelectedLatitude = parseInt(JSON.stringify(place.latitude));
+      SelectedLongitude = parseInt(JSON.stringify(place.longitude));
       setHomeBase(place.latitude, userId, place.longitude);
+      navigate('HomeScreen', {latitude: SelectedLatitude, longitude: SelectedLongitude});
     })
     .catch(error => console.log(error.message));  // error is a Javascript Error object
   };
@@ -73,7 +69,7 @@ export default class FacebookLoginScreen extends React.Component {
       </View>
     );
   }
-}
+  }
 
 const window = Dimensions.get('window');
 

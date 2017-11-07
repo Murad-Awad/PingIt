@@ -36,31 +36,68 @@ var fbapp =  firebase.initializeApp(config);
 
 const auth = fbapp.auth();
 const provider = firebase.auth.FacebookAuthProvider;
-var user = auth.currentUser;
 var registerUser = function(token){
   auth.signInWithCredential(token);
-  user = auth.currentUser;
 }
 
-var setUserMobile = function(userId, name, onesignalid) {
+var setUserMobile = function(userId, name, onesignalid, friends) {
 
         let testpath = "/user/" + userId + "/details";
 
         return firebase.database().ref(testpath).set({
             name: name,
             onesignalid: 1,
-            setup: false
+            setup: false,
+            friends: friends,
+            logged_in: true
         })
 
     };
-export default class LoginPage extends React.Component {  
-  static navigationOptions = {
+
+
+export default class LoginPage extends React.Component {   
+  static navigationOptions = {   
     header: null,
-  };
-    render() {  
-    const { navigate } = this.props.navigation;
-    if (auth.currentUser==null){
-    return (
+   }
+      
+  constructor(props){   
+    super(props);
+    this.state = {logged_in: false, signed_up: false};
+  }
+
+    render() { 
+      const { navigate } = this.props.navigation;
+    async function login(credential, name, friends) {  
+        
+        try {  
+            await firebase.auth()
+                .signInWithCredential(credential);
+
+            console.log("Logged In!");
+            setUserMobile(firebase.auth().currentUser.uid, name, friends);
+            navigate('LoginConfirm', {name: name, id: firebase.auth().currentUser.uid});
+            // Navigate to the Home page
+
+        } catch (error) {
+            console.log(error.toString())
+        }
+
+    }
+
+    async function logout() {  
+
+        try { 
+
+            await firebase.auth().signOut();
+
+            // Navigate to login view
+
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+    return ( 
       <View style={styles.container}>
         <View style={styles.whiteBox}>
           <Image style={styles.dingoCircle}
@@ -69,47 +106,46 @@ export default class LoginPage extends React.Component {
           <Text style={styles.description}>Facebook lets</Text>
           <Text style={styles.description}>you easily add</Text>
           <Text style={styles.description}>friends to notify.</Text>
-          <LoginButton
-          publishPermissions={["publish_actions"]}
-          onLoginFinished={ 
-            (error, result) => {
-              console.log(result);
-              if (error) {
-                alert("Login failed with error: " + result.error);
-              } else if (result.isCancelled) {
-                alert("Login was cancelled");
-              } else {  
-                AccessToken.getCurrentAccessToken().then((data) => {
-                  const { accessToken } = data;
-                  fetch('https://graph.facebook.com/v2.5/me?fields=email,name,friends&access_token=' + accessToken)
-                    .then((response) => response.json())
-                    .then((json) => {
-                    // Some user object has been set up somewhere, build that user here
-                  name = json.name;
-                  id = json.id;
-                  console.log(name);
-                  const credential = provider.credential(accessToken);
-                  registerUser(credential);
-                  var user = auth.currentUser;
-                  setUserMobile(user.uid, name, id);
-                  navigate('LoginConfirm', {name: name, id: user.uid});   
-                  }  )
-              })
+          <View style={styles.login}>
+            <LoginButton
+            readPermissions={["public_profile, email, user_friends"]}
+            onLoginFinished={ 
+              (error, result) => {
+                console.log(result);
+                if (error) {
+                  alert("Login failed with error: " + result.error);
+                } else if (result.isCancelled) {
+                  alert("Login was cancelled");
+                } else {  
+                  AccessToken.getCurrentAccessToken().then((data) => {
+                    const { accessToken } = data;
+                    fetch('https://graph.facebook.com/v2.5/me?fields=email,name,friends&access_token=' + accessToken)
+                      .then((response) => response.json())
+                      .then((json) => {
+                    friends = json.friends.data;
+                      // Some user object has been set up somewhere, build that user here
+                    name = json.name;
+                    id = json.id;
+                    console.log(json);
+                    const credential = provider.credential(accessToken);
+                    navigate('LoginConfirm',{name: name, id: firebase.auth().currentUser.uid});
+                    login(credential, name, friends);
+                    
+                    } )
+                })
+              }
+              }
             }
-            }
-          }
-          onLogoutFinished={() => {auth.signOut()}, alert("User logged out")}/>
+            onLogoutFinished={() => {logout();}, alert("User logged out")}/>
+          </View>
         </View>
       </View>
           //<Image style={styles.facebookButton}
                  //source={require('./facebook_button.png')} />
     );
   }
-}
-}
-
+  }
 const window = Dimensions.get('window');
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -117,25 +153,20 @@ const styles = StyleSheet.create({
   },
   whiteBox: {
     flex: 1,
-    margin: 30,
+    margin: 20,
     backgroundColor: '#fff',
     alignItems: 'center',
-    padding: 20,
     borderRadius: 30,
   },
   dingoCircle: {
-    marginTop: 30,
-    marginBottom: 25,
-    width: 133,
-    height: 133,
+    marginTop: window.height/6,
+    marginBottom: window.height/15,
+    width: window.width/3,
+    height: window.width/3,
   },
   description: {
-    //width: 233px,
-    //height: 166px,
-    //left: calc(50% - 233px/2),
-    //top: calc(50% - 166px/2 + 77.5px),
     fontFamily: 'Avenir',
-    fontSize: 22,
+    fontSize: window.width / 15,
     alignItems: 'center',
     color: '#353535',
   },
@@ -144,7 +175,10 @@ const styles = StyleSheet.create({
     width: 200,
     height: 31,
   },
-});
+  loginB: {
+     marginTop: window.height / 15,
+  },
+ }  );
 export{fbapp};
 export{LoginPage};
 

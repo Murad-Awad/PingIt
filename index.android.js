@@ -13,14 +13,16 @@ import React, { Component } from 'react';
  import OneSignal from 'react-native-onesignal';
  import * as firebase from 'firebase';
  import {LoginPage} from './login.js';
+var HomeScreen = require('./home.js');
 var AddFriends = require('./AddFriends.js');
 var CustomMap = require('./map.js');
 var FacebookLoginScreen = require('./LoginComplete.js');
 const App = StackNavigator({
-  Home: { screen: LoginPage},
+  Home: {screen: LoginPage},
   Map: {screen: CustomMap},
   LoginConfirm: {screen: FacebookLoginScreen},
-  AddFriends: {screen: AddFriends}
+  AddFriends: {screen: AddFriends},
+  HomeScreen: {screen: HomeScreen}
 });
 
 AppRegistry.registerComponent('pingit',()=> App);
