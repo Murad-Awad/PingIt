@@ -60,7 +60,7 @@ export default class FacebookLoginScreen extends React.Component {
           <Text style={styles.bodyText}>so that you do not</Text>
           <Text style={styles.bodyText}>have to.</Text>
         </View>
-        <TouchableOpacity onPress={() => {setLocation(navigate, params.id);}}
+        <TouchableOpacity onPress={() => {setLocation(navigate, firebase.auth().currentUser.uid);}}
                           style={styles.button}>
           <Text style={styles.buttonText}>Add Your Home Base</Text>
         </TouchableOpacity>

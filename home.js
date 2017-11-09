@@ -10,70 +10,73 @@ import {
   TouchableHighlight,
   View,
   Dimensions,
-  Button
+  Button,
+  BackHandler
 } from 'react-native';
 import reactCreateClass from 'create-react-class';
 import OneSignal from 'react-native-onesignal';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import LocationServicesDialogBox from "react-native-android-location-services-dialog-box";
+ import * as firebase from 'firebase';
 const LATITUDE = 37.8715926;
 const LONGITUDE = -122.27274699999998;
+var getTestPath= function(){
+  return testpath = "/user/" + firebase.auth().currentUser.uid + "/details/" + "/home/"; 
+};
 export default class HomeScreen extends Component {  
+  constructor(props){  
+        super(props);
+            }
       static navigationOptions = {
           latitude: LATITUDE,
           longitude: LONGITUDE
       };
 
-  state = {
+  state = { 
+      position:{
+        latitude: LATITUDE,
+        longitude: LONGITUDE
+      },
       DestinationMarker:{  
         latitude: LATITUDE,
         longitude: LONGITUDE
       }
     }
-
-  componentDidMount() { 
-    console.log(this.state.latitude);
-    console.log(this.state.longitude);
+setHome() {  
+    testpath = "/user/" + firebase.auth().currentUser.uid + "/details/" + "/home/"; 
+   firebase.database().ref(getTestPath()+"/latitude").on("value", (snap) => {  lat = snap.val();
+   this.setState({
+      DestinationMarker:{ 
+      latitude: snap.val()
+      }
+    });
+  });
+      firebase.database().ref(getTestPath()+"/longitude").on("value", (snap) => {  long = snap.val();
+   this.setState({
+      DestinationMarker:{ 
+      longitude: snap.val()
+      }
+    });
+  });
+}
+  componentDidMount() {
+    this.setHome();
+    navigator.geolocation.getCurrentPosition((position) => { 
+              let initialPosition = JSON.stringify(position);
+              this.setState({ position });
+              }, error => console.log(error), { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000 });
+    BackHandler.addEventListener('hardwareBackPress', () => {
+               LocationServicesDialogBox.forceCloseDialog();
+        });
+    this.watchID = navigator.geolocation.watchPosition((position) => { 
+      var latitude = parseInt(JSON.stringify(position.coords.latitude));
+        var longitude = parseInt(JSON.stringify(position.coords.longitude));
+      });
     OneSignal.addEventListener('received', this.onReceived);
     OneSignal.addEventListener('opened', this.onOpened);
     OneSignal.addEventListener('registered', this.onRegistered);
     OneSignal.addEventListener('ids', this.onIds);
     OneSignal.inFocusDisplaying(2);
-        navigator.geolocation.getCurrentPosition( 
-      (position) => { 
-        var latitude = parseInt(JSON.stringify(position.coords.latitude));
-        var longitude = parseInt(JSON.stringify(position.coords.longitude));
-        if (latitude > this.state.latitude-0.001 && latitude<this.state.latitude+0.001 && longitude> this.state.longitude-0.001 && longitude<this.state.longitude+0.001) {
-        let data = [1,2] // some array as payload
-        let contents = { 
-        'en': 'has gotten home'
-        }
-        playerId = '55920dd3-d936-476d-860e-09c4cca02f5e';
-        OneSignal.postNotification(contents, data, playerId);
-      }   
-    },
-    (error) => { 
-      console.log(this.state.latitude);
-      if (LATITUDE > LATITUDE-1 && LATITUDE<LATITUDE+1 && LONGITUDE> LONGITUDE-1 && LONGITUDE<LONGITUDE+1) { 
-        let data = [1,2] // some array as payload
-        let contents = {
-        'en': 'has gotten home'
-        }
-        playerId = '55920dd3-d936-476d-860e-09c4cca02f5e';
-        OneSignal.postNotification(contents, data, playerId);
-        }},
-  );
-   this.watchID = navigator.geolocation.watchPosition((position) => { 
-      var latitude = parseInt(JSON.stringify(position.coords.latitude));
-        var longitude = parseInt(JSON.stringify(position.coords.longitude));
-        if (latitude > LATITUDE-1 && latitude<LATITUDE+1 && longitude> LONGITUDE-1 && longitude<LONGITUDE+1) {
-        let data = [1,2] // some array as payload
-        let contents = {
-        'en': 'has gotten home'
-        }
-        playerId = '55920dd3-d936-476d-860e-09c4cca02f5e';
-        OneSignal.postNotification(contents, data, playerId);
-        }
-      });
     }
 componentWillUnmount(){
      OneSignal.removeEventListener('received', this.onReceived);
@@ -105,14 +108,24 @@ onNotificationOpened(message, data, isActive) {
 
 
   render() {
+        console.log(this.state.DestinationMarker.latitude);
+        console.log(this.state.position.latitude);
+        if (this.state.position.latitude > this.state.DestinationMarker.latitude-0.001 && this.state.position.latitude<this.state.DestinationMarker.latitude+0.001 && this.state.position.longitude> this.state.DestinationMarker.longitude-0.001 && this.state.position.longitude<this.state.DestinationMarker.longitude+0.001) {
+        let data = [1,2] // some array as payload
+        let contents = { 
+        'en': 'has gotten home'
+        }
+        playerId = '55920dd3-d936-476d-860e-09c4cca02f5e';
+        OneSignal.postNotification(contents, data, playerId);
+      }   
     return (
       <View style={styles.container}>
         <Text style={styles.homeText}>Tap the dingo</Text>
         <Text style={styles.homeText}>to go home.</Text>
-        <TouchableHighlight onPress={() => this.props.navigation.navigate('Progress')}>
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('Progress')}>
           <Image style = {styles.homePhoto}
                  source={require('./img/dingo_circle.png')} />
-        </TouchableHighlight>
+        </TouchableOpacity>
         <TouchableOpacity onPress={() => this.props.navigation.navigate('Sidebar')}>
         <Image style = {styles.menuPhoto}
                source={require('./img/menu.png')} />

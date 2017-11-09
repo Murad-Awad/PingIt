@@ -18,13 +18,10 @@ var AddFriends = require('./AddFriends.js');
 var CustomMap = require('./map.js');
 var FacebookLoginScreen = require('./LoginComplete.js');
 var SplashScreen = require('./SplashScreen.js');
-const App = StackNavigator({
-  Home: {screen: SplashScreen},
-  Map: {screen: CustomMap},
-  Login:{screen: LoginPage},
+const SetupNavigator = StackNavigator({
+  Home: {screen: LoginPage},
   LoginConfirm: {screen: FacebookLoginScreen},
   AddFriends: {screen: AddFriends},
   HomeScreen: {screen: HomeScreen}
 });
-
-AppRegistry.registerComponent('pingit',()=> App);
+module.exports = SetupNavigator;

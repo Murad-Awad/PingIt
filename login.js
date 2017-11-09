@@ -67,6 +67,7 @@ export default class LoginPage extends React.Component {
 
     render() { 
       const { navigate } = this.props.navigation;
+      const{screenProps} = this.props;
     async function login(credential, name, friends) {  
         
         try {  
@@ -74,8 +75,8 @@ export default class LoginPage extends React.Component {
                 .signInWithCredential(credential);
 
             console.log("Logged In!");
-            setUserMobile(firebase.auth().currentUser.uid, name, friends);
             navigate('LoginConfirm', {name: name, id: firebase.auth().currentUser.uid});
+            setUserMobile(firebase.auth().currentUser.uid, name, friends);
             // Navigate to the Home page
 
         } catch (error) {
@@ -128,7 +129,6 @@ export default class LoginPage extends React.Component {
                     id = json.id;
                     console.log(json);
                     const credential = provider.credential(accessToken);
-                    navigate('LoginConfirm',{name: name, id: firebase.auth().currentUser.uid});
                     login(credential, name, friends);
                     
                     } )
@@ -181,4 +181,3 @@ const styles = StyleSheet.create({
  }  );
 export{fbapp};
 export{LoginPage};
-
