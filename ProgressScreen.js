@@ -47,12 +47,13 @@ export default class ProgressScreen extends React.Component {
   FriendsUserList = []
   GetFriendsSignalID = function(userId){
   console.warn(userId);
-  var testpath = "/user/"+userId +"/details/" + "/OneSignalId/"+"/ID";
+  var testpath = "/user/"+userId +"/details/";
      firebase.database().ref(testpath).on("value", (snap) => {  
-    id = snap.val();
+    id = snap.val().OneSignalId.ID;
+    name = snap.val().name
         let data = [1,2] // some array as payload
         let contents = { 
-        'en': 'DrangusMan has gotten home'
+        'en': name+' has gotten home'
         }
         OneSignal.postNotification(contents, data, id);
         navigate('CompleteJourneyScreen');
