@@ -56,7 +56,7 @@ export default class ProgressScreen extends React.Component {
         'en': name+' has gotten home'
         }
         OneSignal.postNotification(contents, data, id);
-        navigate('CompleteJourneyScreen');
+        this.props.navigation.navigate('CompleteJourneyScreen');
     this.state.OneSignalIdList.push(id);
   });
 }

@@ -1,0 +1,32 @@
+Bugs:
+
+!!!!! 
+Cannot access setup
+Logging in returns to the same page with the login button replaced by the log out button so it's a continuous loop. (Unhandled promise rejection)
+!!!!!
+
+Get rid of notifications screen on SidebarScreen
+Friends list 
+- get rid of header but keep back button
+- usually doesn't load friendlist
+- what's the join the pack button for???
+- when I click on join the pack button with no friends on screen, error that null is not an object is sent
+
+HomeScreen
+- Get rid of header (minus back button)
+
+CurrentLocationScreen
+- Needs to implement mapview entirely, just a dummy page right now
+
+FeedbackScreen
+- text input is nonexistent...should we have this page if we won't use it yet?
+
+If we cannot access the user's location, it sends an error that null is not an object (null coming from either the latitude or longitude)
+- maybe handle this error with a separate screen or something asking for location permissions? And if they're out of range then separate screen for nonlocation
+
+When logging out, needs to get rid of the alert that the user logged out (it shows up 2x)
+After logged out, the log out button is on the login screen? Need to move it to log out screeN!! (LogOutConfirmScreen)
+
+logged out and logged back in but it was automatic so I didn't put in info...then when I tried to log out again it resulted in it saying "logged in with Facebook" with "Facebook" being the user.
+
+When completely logged out, stuck on splash screen

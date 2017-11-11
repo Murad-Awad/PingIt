@@ -56,33 +56,34 @@ export default class LoginPage extends React.Component {
   static navigationOptions = {   
     header: null,
    }
-      
+   componentDidMount(){
+    firebase.auth().onAuthStateChanged( function(user) { 
+  if (user) { 
+    console.log('bratatatatttatat');
+    this.props.navigation.navigate('LoginConfirm');
+     } else {
+      console.log('xd');
+  }}); 
+ }
   constructor(props){   
     super(props);
     this.state = {logged_in: false, signed_up: false};
   }
     render() { 
     const{navigate}=this.props.navigation;
+
+
     async function login(credential, name, id) {  
         
         try {  
+          console.warn(name);
             await firebase.auth()
                 .signInWithCredential(credential);
-
-            console.log("Logged In!");
-            var testPath =  "/user/" + id + "/details/" + "/setup";
-                    firebase.database().ref(testPath).on("value", (snap) => {
-                  if (snap.val()==true){ 
-                    navigate("HomeScreen");
-                  }
-                else{
-                  navigate('LoginConfirm', {name: name, id: id});
-                }
-              });
+            navigate('LoginConfirm', {name: name, id: id});
             setUserMobile(id, name);
             // Navigate to the Home page
 
-        } catch (error) {
+        } catch (error) { 
             console.log(error.toString())
         }
 
@@ -118,23 +119,26 @@ export default class LoginPage extends React.Component {
                 console.log(result);
                 if (error) {
                   alert("Login failed with error: " + result.error);
-                } else if (result.isCancelled) {
+                } else if (result.isCancelled) { 
                   alert("Login was cancelled");
                 } else {  
                   AccessToken.getCurrentAccessToken().then((data) => {
                     const { accessToken } = data;
+                    console.log(accessToken);
+                    console.log('swag');
                     fetch('https://graph.facebook.com/v2.5/me?fields=email,name,friends&access_token=' + accessToken)
                       .then((response) => response.json())
                       .then((json) => {
+                    console.log(json);
                     friends = json.friends.data;
                       // Some user object has been set up somewhere, build that user here
                     name = json.name;
                     id = json.id;
-                    console.log(json);
                     const credential = provider.credential(accessToken);
+                    navigate('LoginConfirm', {name: name, id: id});
                     login(credential, name, json.id);
-                    
-                    } )
+                   
+                    }); 
                 })
               }
               }

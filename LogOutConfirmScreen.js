@@ -23,7 +23,7 @@ export default class LogOutScreen extends React.Component {
                source={require('./dingotransparent.png')} />
         <Text style={styles.logText}>You are about to log out.</Text>
         <Text style={styles.logText}>Are you sure?</Text>
-        <TouchableOpacity onPress={() => {firebase.auth().signOut();this.props.navigation.navigate('LogOut');}}>
+        <TouchableOpacity onPress={() => {this.props.navigation.navigate('LogOut');}}>
           <View style={styles.logOutButton}>
             <Text style={styles.logOutText}>LOG OUT</Text>
           </View>

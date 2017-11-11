@@ -65,12 +65,17 @@ export default class SplashScreen extends React.Component {
     firebase.auth().onAuthStateChanged( function(user) { 
   if (user) { 
         AccessToken.getCurrentAccessToken().then((data) => {
+                    if (data == null){
+                      navigate('Login');
+                    }
                     const { accessToken } = data;
                     fetch('https://graph.facebook.com/v2.5/me?fields=email,name,friends&access_token=' + accessToken)
                       .then((response) => response.json())
                       .then((json) => {
                     var testPath =  "/user/" + json.id + "/details/" + "/setup";
                     firebase.database().ref(testPath).on("value", (snap) => {
+                      console.log('yuhhhhhhh');
+                      console.log(snap.val());
                   if (snap.val()==true){ 
                     navigate("HomeScreen");
                   }

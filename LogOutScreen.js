@@ -28,7 +28,7 @@ export default class LogOutScreen extends React.Component {
           
 
 
-          this.props.navigation.navigate('LoginConfirm');}}>
+          this.props.navigation.navigate('Login');}}>
           <Image style={styles.facebookButton}
                  source={require('./img/facebook_button.png')} />
         </TouchableOpacity>
