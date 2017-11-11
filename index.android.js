@@ -23,18 +23,18 @@ import NotificationsScreen from './NotificationsScreen';
 import ProgressScreen from './ProgressScreen';
 import SidebarScreen from './SidebarScreen';
 import WelcomeScreen from './WelcomeScreen';
-var AddFriends = require('./AddFriends.js');
+var AddFriendsSetUp = require('./AddFriendsSetUp.js');
 var HomeScreen = require('./home.js');
 var CustomMap = require('./map.js');
 var FacebookLoginScreen = require('./LoginComplete.js');
 var SplashScreen = require('./SplashScreen.js');
-
+var AddFriends = require('./AddFriends.js');
 const App = StackNavigator({
     SplashScreen: {screen: SplashScreen},
     Map: {screen: CustomMap},
     Login:{screen: LoginPage},
     LoginConfirm: {screen: FacebookLoginScreen},
-    AddFriends: {screen: AddFriends},
+    AddFriendsSetUp: {screen: AddFriendsSetUp},
     HomeScreen: {screen: HomeScreen},
     Progress: {screen: ProgressScreen},
     CompleteJourney: { screen: CompleteJourneyScreen },
@@ -46,6 +46,9 @@ const App = StackNavigator({
     Notifications: { screen: NotificationsScreen },
     Sidebar: { screen: SidebarScreen },
     Welcome: { screen: WelcomeScreen },
+    AddFriends:{
+      screen: AddFriends
+    }
 });
 
 AppRegistry.registerComponent('pingit',()=> App);

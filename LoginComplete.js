@@ -13,6 +13,7 @@ import {
 import * as firebase from 'firebase';
 import {fbapp} from './login.js';
 import RNGooglePlaces from 'react-native-google-places';
+import OneSignal from 'react-native-onesignal';
 const LATITUDE = 37.8715926;
 const LONGITUDE = -122.27274699999998;
 const LATITUDE_DELTA = 0.01;
@@ -23,6 +24,14 @@ var setHomeBase = function(latitude, userId, longitude, navigate) {
         return  firebase.database().ref(testpath).set({
             latitude: latitude,
             longitude: longitude
+        })
+    };
+var setOneSignalID = function(userId, onesignalid) {
+
+        let testpath = "/user/" + userId + "/details/"+"/OneSignalId";
+
+        return firebase.database().ref(testpath).set({
+            ID: onesignalid
         })
     };
 var setLocation= function(navigate, userId){
@@ -36,15 +45,36 @@ var setLocation= function(navigate, userId){
       SelectedLatitude = parseInt(JSON.stringify(place.latitude));
       SelectedLongitude = parseInt(JSON.stringify(place.longitude));
       setHomeBase(place.latitude, userId, place.longitude);
-      navigate('HomeScreen', {latitude: SelectedLatitude, longitude: SelectedLongitude});
+      navigate('AddFriendsSetUp');
     })
     .catch(error => console.log(error.message));  // error is a Javascript Error object
   };
-export default class FacebookLoginScreen extends React.Component {
+
+
+export default class FacebookLoginScreen extends React.Component { 
   state = {name: 'Joe', id: 'swag'}
-  static navigationOptions = {
+  static navigationOptions = { 
     header: null,
   };
+  componentDidMount(){
+    OneSignal.configure();
+    OneSignal.addEventListener('ids', this.onIds);
+    OneSignal.addEventListener('received', this.onReceived);
+    OneSignal.addEventListener('opened', this.onOpened);
+    OneSignal.addEventListener('registered', this.onRegistered);
+    OneSignal.addEventListener('ids', this.onIds);
+    OneSignal.inFocusDisplaying(2);
+  }
+  componentWillUnmount(){
+     OneSignal.removeEventListener('received', this.onReceived);
+     OneSignal.removeEventListener('opened', this.onOpened);
+     OneSignal.removeEventListener('registered', this.onRegistered);
+     OneSignal.removeEventListener('ids', this.onIds);
+  }
+  onIds = (device) => {
+        console.log(device.userId);
+        setOneSignalID(this.props.navigation.state.params.id, device.userId);
+    }
   render() {  
     const { params } = this.props.navigation.state;
     const { navigate } = this.props.navigation;
@@ -60,7 +90,7 @@ export default class FacebookLoginScreen extends React.Component {
           <Text style={styles.bodyText}>so that you do not</Text>
           <Text style={styles.bodyText}>have to.</Text>
         </View>
-        <TouchableOpacity onPress={() => {setLocation(navigate, firebase.auth().currentUser.uid);}}
+        <TouchableOpacity onPress={() => {setLocation(navigate, params.id);}}
                           style={styles.button}>
           <Text style={styles.buttonText}>Add Your Home Base</Text>
         </TouchableOpacity>

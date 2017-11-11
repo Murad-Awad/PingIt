@@ -17,12 +17,28 @@ import reactCreateClass from 'create-react-class';
 import OneSignal from 'react-native-onesignal';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import LocationServicesDialogBox from "react-native-android-location-services-dialog-box";
- import * as firebase from 'firebase';
+import * as firebase from 'firebase';
+import FBSDK, { LoginManager } from 'react-native-fbsdk';
 const LATITUDE = 37.8715926;
 const LONGITUDE = -122.27274699999998;
-var getTestPath= function(){
-  return testpath = "/user/" + firebase.auth().currentUser.uid + "/details/" + "/home/"; 
+ const {
+   LoginButton,
+   AccessToken,
+   GraphRequest,
+   GraphRequestManager
+ } = FBSDK;
+
+var getTestPath= function(userId){
+  return testpath = "/user/" + userId + "/details/" + "/home"; 
 };
+var setOneSignalID = function(userId, onesignalid) {
+
+        let testpath = "/user/" + userId + "/details/"+"/OneSignalId";
+
+        return firebase.database().ref(testpath).set({
+            ID: onesignalid
+        })
+    };
 export default class HomeScreen extends Component {  
   constructor(props){  
         super(props);
@@ -42,25 +58,41 @@ export default class HomeScreen extends Component {
         longitude: LONGITUDE
       }
     }
-setHome() {  
-    testpath = "/user/" + firebase.auth().currentUser.uid + "/details/" + "/home/"; 
-   firebase.database().ref(getTestPath()+"/latitude").on("value", (snap) => {  lat = snap.val();
-   this.setState({
-      DestinationMarker:{ 
-      latitude: snap.val()
-      }
-    });
-  });
-      firebase.database().ref(getTestPath()+"/longitude").on("value", (snap) => {  long = snap.val();
-   this.setState({
-      DestinationMarker:{ 
-      longitude: snap.val()
-      }
-    });
-  });
+ async ConfirmLogIn(navigate){   
+  try{ 
+   await firebase.auth().onAuthStateChanged( function(user) { 
+  if (user) { 
+   this.state= {isLoggedIn: true};
+     } else {
+      console.log('xd');
+    navigate('Login');
+  }}); 
+ }
+ catch(error){}
 }
+setHome() {
+   AccessToken.getCurrentAccessToken().then(
+         (data) => {
+           //Determine if this was their first login onto the app
+           const {accessToken} = data;
+            fetch('https://graph.facebook.com/v2.5/me?fields=email,name,friends&access_token=' + accessToken)
+                .then((response) => response.json())
+                .then((json) => {
+            firebase.database().ref(getTestPath(json.id)).on("value", (snap) => {  lat = snap.val();
+                  this.setState({
+                                  DestinationMarker:{ 
+                                  latitude: snap.val().latitude,
+                                  longitude: snap.val().longitude
+                                  }
+                });
+          });
+        })
+     }
+    )
+ }
+
   componentDidMount() {
-    this.setHome();
+    OneSignal.configure();
     navigator.geolocation.getCurrentPosition((position) => { 
               let initialPosition = JSON.stringify(position);
               this.setState({ position });
@@ -85,6 +117,19 @@ componentWillUnmount(){
      OneSignal.removeEventListener('ids', this.onIds);
     navigator.geolocation.clearWatch(this.watchID);
 }
+  onIds = (device) => {
+        console.log(device.userId);
+         AccessToken.getCurrentAccessToken().then(
+         (data) => {
+           //Determine if this was their first login onto the app
+           const {accessToken} = data;
+            fetch('https://graph.facebook.com/v2.5/me?fields=email,name,friends&access_token=' + accessToken)
+                .then((response) => response.json())
+                .then((json) => {
+        setOneSignalID(json.id, device.userId);
+                    } );
+          } );
+        }
 onNotificationOpened(message, data, isActive) { 
   if (data.p2p_notification) {
     for (var num in data.p2p_notification) {
@@ -108,21 +153,16 @@ onNotificationOpened(message, data, isActive) {
 
 
   render() {
-        console.log(this.state.DestinationMarker.latitude);
-        console.log(this.state.position.latitude);
-        if (this.state.position.latitude > this.state.DestinationMarker.latitude-0.001 && this.state.position.latitude<this.state.DestinationMarker.latitude+0.001 && this.state.position.longitude> this.state.DestinationMarker.longitude-0.001 && this.state.position.longitude<this.state.DestinationMarker.longitude+0.001) {
-        let data = [1,2] // some array as payload
-        let contents = { 
-        'en': 'has gotten home'
-        }
-        playerId = '55920dd3-d936-476d-860e-09c4cca02f5e';
-        OneSignal.postNotification(contents, data, playerId);
-      }   
+      OneSignal.configure();
+      this.setHome();
+      const { navigate } = this.props.navigation;
+      console.log(this.state.DestinationMarker);
+      this.ConfirmLogIn(navigate);
     return (
       <View style={styles.container}>
         <Text style={styles.homeText}>Tap the dingo</Text>
         <Text style={styles.homeText}>to go home.</Text>
-        <TouchableOpacity onPress={() => this.props.navigation.navigate('Progress')}>
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('Progress', {latitude:this.state.DestinationMarker.latitude, longitude:this.state.DestinationMarker.longitude})}>
           <Image style = {styles.homePhoto}
                  source={require('./img/dingo_circle.png')} />
         </TouchableOpacity>

@@ -19,31 +19,24 @@ import {LoginPage} from './login.js';
 import {fbapp} from './login.js';
 import LocationServicesDialogBox from "react-native-android-location-services-dialog-box";
 var HomeScreen = require('./home.js');
-var SetupNavigator = require('./SetupNavigator.js');
-
+const FBSDK = require('react-native-fbsdk');
+ const {
+   AccessToken,
+   GraphRequest,
+ } = FBSDK;
 export default class SplashScreen extends React.Component { 
   constructor(props) { 
     super(props);
    this.state = {isLoggedIn: false}
   }
-
-  async ConfirmLogIn(navigate){   
-  try{ 
-   await firebase.auth().onAuthStateChanged( function(user) { 
-  if (user) { 
-   this.state= {isLoggedIn: true};
-   navigate('HomeScreen');
-   console.log(this.state);
-     } else { 
-    navigate('LoginPage');
-  }}); 
- }
-  catch(error){}
+    static navigationOptions = { 
+    header: null,
   };
-  componentDidMount() { 
+
+  componentDidMount() {
     console.log(this.state.isLoggedIn);
      LocationServicesDialogBox.checkLocationServicesIsEnabled({ 
-            message: "<h2>Use Location ?</h2>This app wants to change your device settings:<br/><br/>Use GPS, Wi-Fi, and cell network for location<br/><br/><a href='#'>Learn more</a>",
+            message: "<h2>Use Location?</a>",
             ok: "YES",
             cancel: "NO",
             enableHighAccuracy: true, // true => GPS AND NETWORK PROVIDER, false => ONLY GPS PROVIDER
@@ -63,17 +56,35 @@ export default class SplashScreen extends React.Component {
                LocationServicesDialogBox.forceCloseDialog();
         });
   }
+  componentWillUnmount() {
+
+  }
 
   render() {  
-    const { navigate } = this.props.navigation;
-    this.ConfirmLogIn(navigate);
-    if (this.state.isLoggedIn === true) {
-       return <HomeScreen/>
-    }
-    else if (this.state.isLoggedIn === null) {
-     return <SetupNavigator/>
-    }
- 
+     const { navigate } = this.props.navigation;
+    firebase.auth().onAuthStateChanged( function(user) { 
+  if (user) { 
+        AccessToken.getCurrentAccessToken().then((data) => {
+                    const { accessToken } = data;
+                    fetch('https://graph.facebook.com/v2.5/me?fields=email,name,friends&access_token=' + accessToken)
+                      .then((response) => response.json())
+                      .then((json) => {
+                    var testPath =  "/user/" + json.id + "/details/" + "/setup";
+                    firebase.database().ref(testPath).on("value", (snap) => {
+                  if (snap.val()==true){ 
+                    navigate("HomeScreen");
+                  }
+                else{
+                  navigate('Login');
+                }
+
+          });
+                    
+                    } )
+                });
+     } else {
+   navigate('Login');
+  }}); 
     return ( 
         <View style={styles.container}>
            <Image style = {styles.splashPhoto}

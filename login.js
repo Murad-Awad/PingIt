@@ -12,7 +12,6 @@ import {
 } from 'react-native';
  import * as firebase from 'firebase';
 import reactCreateClass from 'create-react-class';
-
 const FBSDK = require('react-native-fbsdk');
 const {
   LoginButton,
@@ -40,15 +39,13 @@ var registerUser = function(token){
   auth.signInWithCredential(token);
 }
 
-var setUserMobile = function(userId, name, onesignalid, friends) {
+var setUserMobile = function(userId, name) {
 
         let testpath = "/user/" + userId + "/details";
 
-        return firebase.database().ref(testpath).set({
+        return firebase.database().ref(testpath).update({
             name: name,
-            onesignalid: 1,
             setup: false,
-            friends: friends,
             logged_in: true
         })
 
@@ -64,19 +61,25 @@ export default class LoginPage extends React.Component {
     super(props);
     this.state = {logged_in: false, signed_up: false};
   }
-
     render() { 
-      const { navigate } = this.props.navigation;
-      const{screenProps} = this.props;
-    async function login(credential, name, friends) {  
+    const{navigate}=this.props.navigation;
+    async function login(credential, name, id) {  
         
         try {  
             await firebase.auth()
                 .signInWithCredential(credential);
 
             console.log("Logged In!");
-            navigate('LoginConfirm', {name: name, id: firebase.auth().currentUser.uid});
-            setUserMobile(firebase.auth().currentUser.uid, name, friends);
+            var testPath =  "/user/" + id + "/details/" + "/setup";
+                    firebase.database().ref(testPath).on("value", (snap) => {
+                  if (snap.val()==true){ 
+                    navigate("HomeScreen");
+                  }
+                else{
+                  navigate('LoginConfirm', {name: name, id: id});
+                }
+              });
+            setUserMobile(id, name);
             // Navigate to the Home page
 
         } catch (error) {
@@ -129,7 +132,7 @@ export default class LoginPage extends React.Component {
                     id = json.id;
                     console.log(json);
                     const credential = provider.credential(accessToken);
-                    login(credential, name, friends);
+                    login(credential, name, json.id);
                     
                     } )
                 })

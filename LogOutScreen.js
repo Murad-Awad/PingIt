@@ -24,7 +24,11 @@ export default class LogOutScreen extends React.Component {
         <Text style={styles.logText}>logged out.</Text>
         <Image style = {styles.dingo}
                source={require('./dingotransparent.png')} />
-        <TouchableOpacity onPress={() => this.props.navigation.navigate('LoginConfirm')}>
+        <TouchableOpacity onPress={() => {
+          
+
+
+          this.props.navigation.navigate('LoginConfirm');}}>
           <Image style={styles.facebookButton}
                  source={require('./img/facebook_button.png')} />
         </TouchableOpacity>

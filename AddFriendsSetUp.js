@@ -28,13 +28,20 @@ import React, { Component } from 'react';
 
  var monte = true;
 
+var setUpDone = function(userId) {
 
+        let testpath = "/user/" + userId + "/details";
+
+        return firebase.database().ref(testpath).update({
+            setup: true,
+        })
+
+    };
 
  export default class AddFriends extends React.Component { 
    constructor(props) {
     super(props);
     this.state = {
-      id: 'swag',
       data: [],
       pack: {}
     };
@@ -46,9 +53,9 @@ import React, { Component } from 'react';
                         .then((json) => {
                       console.log(json.friends.data);
                       let fbookFriendData = json.friends.data;
-
+                      setUpDone(json.id);
                       user_friends = []
-                      this.state.id = json.id;
+
                       for (var i = 0; i < fbookFriendData.length; i++) {
                         let friendId = fbookFriendData[i].id;
                         let friendName = fbookFriendData[i].name;
@@ -130,7 +137,7 @@ import React, { Component } from 'react';
   }
 
   //Save the chosen friends
-  savePack(userId) {
+  savePack() {
     myPack = [];
 
     for (var key in this.state.pack) {
@@ -144,7 +151,8 @@ import React, { Component } from 'react';
     }
 
     //SEND LIST OF FRIENDS IN PACK TO DATABASE
-    var testpath = "/user/" + userId + "/details/"+"/friends";
+    console.warn(myPack);
+    var testpath = "/user/" + firebase.auth().currentUser.uid + "/details/"+"/friends";
     return firebase.database().ref(testpath).set({
             myPack
         })
@@ -154,7 +162,6 @@ import React, { Component } from 'react';
 
 
    render() {  
-    const { navigate } = this.props.navigation;
     if(monte == true) {
       AccessToken.getCurrentAccessToken().then(
          (data) => {
@@ -164,6 +171,7 @@ import React, { Component } from 'react';
            this.getFriends(accessToken);
          });
     }
+    const { navigate } = this.props.navigation;
     return (
       <View style={styles.container}>
           <View style={styles.ScreenTitleContainer}>
@@ -192,7 +200,7 @@ import React, { Component } from 'react';
               keyExtractor={item => item.state.facebookId}
             />
           </View>
-              <TouchableOpacity style={styles.continueButton} onPress={() =>{ this.savePack(this.state.id); navigate('HomeScreen');}}>
+              <TouchableOpacity style={styles.continueButton} onPress={() =>{ this.savePack(); navigate('HomeScreen');}}>
                 <View style={styles.loginButton}>
                   <Text style={styles.loginText}>JOIN THE PACK</Text>
                 </View>

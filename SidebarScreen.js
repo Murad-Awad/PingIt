@@ -40,11 +40,6 @@ export default class SidebarScreen extends React.Component {
             title='Friends List'
           />
           <Button
-            onPress={() => this.props.navigation.navigate('CurrentLocation')}
-            style={styles.but}
-            title='Current Loc'
-          />
-          <Button
             onPress={() => this.props.navigation.navigate('About')}
             style={styles.but}
             title='About'

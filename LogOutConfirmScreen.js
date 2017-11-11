@@ -10,7 +10,7 @@ import {
   Dimensions,
   Button
 } from 'react-native';
-
+import * as firebase from 'firebase';
 export default class LogOutScreen extends React.Component {
   static navigationOptions = {
     header: null,
@@ -23,12 +23,12 @@ export default class LogOutScreen extends React.Component {
                source={require('./dingotransparent.png')} />
         <Text style={styles.logText}>You are about to log out.</Text>
         <Text style={styles.logText}>Are you sure?</Text>
-        <TouchableOpacity onPress={() => this.props.navigation.navigate('LogOut')}>
+        <TouchableOpacity onPress={() => {firebase.auth().signOut();this.props.navigation.navigate('LogOut');}}>
           <View style={styles.logOutButton}>
             <Text style={styles.logOutText}>LOG OUT</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => this.props.navigation.navigate('Home')}>
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('HomeScreen')}>
           <View style={styles.cancelButton}>
             <Text style={styles.cancelText}>CANCEL</Text>
           </View>
